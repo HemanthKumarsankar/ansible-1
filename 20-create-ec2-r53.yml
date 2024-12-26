@@ -1,0 +1,61 @@
+- name: creating ec2 and r53
+  hosts: local
+  connection: local
+  vars:
+   sg_id: "sg-04de82942b1f8408d"
+   subnet_id: "subnet-09ca74174dd671a63"
+   image_id: "ami-09c813fb71547fc4f" 
+   instance:
+    - frontend
+    - backend
+    - mysql
+   zone: "Hemanth.online"
+  tasks:
+  - name: install boto3 and botocore
+    ansible.builtin.pip:
+     name:
+      - boto3
+      - botocore
+     executable: pip3.9
+  - name: creating ec2 instances
+    amazon.aws.ec2_instance:
+      name: "{{item}}"
+      vpc_subnet_id: "{{ subnet_id }}"
+      security_group: "{{ sg_id }}"
+      image_id: "{{image_id}}"
+      instance_type: "t3.micro"
+    loop: "{{instance}}"
+    register: ec2_instance
+#pip3.9 install boto3 botocore 
+  - name: print the output
+    ansible.builtin.debug:
+     msg: "{{ec2_instance}}"
+
+# private_ip_address r53
+  - name: creating route 53 private records
+    amazon.aws.route53:
+      state: present
+      zone: "{{zone}}"
+      record: "{{item.item}}.{{zone}}"  #frontend.Hemanth.online
+      type: A
+      ttl: 1
+      value: "{{item.instances[0].private_ip_address}}" 
+      wait: true
+      overwrite: true
+    loop: "{{ec2_instance.results}}"
+
+#  public_ip_address r53 
+  - name: creating route 53 public records and only forntend
+    amazon.aws.route53:
+      state: present
+      zone: "{{zone}}"
+      record: "{{zone}}" #Hemanth.online
+      type: A
+      ttl: 1
+      value: "{{item.instances[0].public_ip_address}}" 
+      wait: true
+      overwrite: true
+    loop: "{{ec2_instance.results}}"
+    when: item.item == "frontend"
+
+

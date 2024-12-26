@@ -1,0 +1,6 @@
+- name: print the variable from inventory file
+  hosts: anisble_node_private_IP
+  tasks:
+  - name: get the var from inventory file
+    ansible.builtin.debug:
+     msg: "Hi i am learning {{COURSE}}, duration is {{DURATION}}, trainer by {{TRAINER}}"

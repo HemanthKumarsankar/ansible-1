@@ -1,0 +1,14 @@
+- name: adding or removing pkgs
+  hosts: local
+  connection: local
+  become: yes
+  tasks:
+  - name: using loop add/removing the pkgs
+    ansible.builtin.package:
+     name: "{{item.name}}"
+     state: "{{item.state}}"
+    loop:
+    - {name: 'nginx' , state: 'present'}
+    - {name: 'mysql' , state: 'absent'}
+    - {name: 'httpd' , state: 'absent'}
+    - {name: 'ansible' , state: 'present'}

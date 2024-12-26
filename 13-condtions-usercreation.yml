@@ -1,0 +1,33 @@
+- name : check user exist or not, if not create it
+  hosts: anisble_node_private_IP
+  become: yes
+  tasks:
+  - name: check user exists or not
+    ansible.builtin.command: id expense
+    register: USER  # here USER is the variable that store the above command o/p
+    #we know here error will encountered so google error handiling in anisble
+    ignore_errors: true
+  
+  - name: print the user info
+    ansible.builtin.debug:
+     msg: "user info: {{USER}}"
+# o/p
+#   "msg": "user info: 
+#   {
+#     'changed': True, 
+#     'stdout': '', 
+#     'stderr': 'id: ‘expense’: no such user', 
+#     'rc': 1, ---return code we will use in this o/p
+#     'cmd': ['id', 'expense'], 
+#     'start': '2024-12-08 06:28:36.105428', 
+#     'end': '2024-12-08 06:28:36.111625', 
+#     'delta': '0:00:00.006197', 
+#     'failed': True, 
+#     'msg': 'non-zero return code',
+#     'stdout_lines': [], 
+#     'stderr_lines': ['id: ‘expense’: no such user']"
+#   }
+
+  - name: create user
+    ansible.builtin.command: useradd expense
+    when: USER.rc !=0

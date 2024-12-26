@@ -1,0 +1,8 @@
+- name: print the var from file
+  hosts: anisble_node_private_IP
+  vars_files: # to declare varibles from below mentioned file and declares variable name like "vars_files"
+  - vars.yml
+  tasks:
+  - name: print the variables form vars file
+    ansible.builtin.debug:
+      msg: "Hi i am learning {{Course}}, duration is {{Duration}}, trainer by {{Trainer}}"

@@ -1,0 +1,14 @@
+- name: install nginx and run
+  hosts: anisble_node_private_IP
+  become: y  # take sudo access or become: yes
+  tasks: 
+  - name: install nginx
+    ansible.builtin.package: #hetrogenous module that can works for all distributins
+     name: nginx   #mandatory for syntax
+     state: installed #mandatory for syntax
+
+  - name: run nginx
+    ansible.builtin.service: #miodule to run service
+      name: nginx   #mandatory for syntax
+      state: started
+      enabled: yes

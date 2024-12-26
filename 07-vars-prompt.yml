@@ -1,0 +1,16 @@
+- name: print the variables from prompt
+  hosts: anisble_node_private_IP
+  vars_prompt:
+  - name: COURSE
+    prompt: enter the course details
+    private: false #not a confidential
+  - name: DURATION
+    prompt: enter the duration details
+    private: false #not a confidential
+  - name : TRAINER
+    prompt: enter the trainer details
+    private: false #not a confidential
+  tasks: 
+  - name: variables giving from the prompt
+    ansible.builtin.debug:
+     msg: "Hi i am learning {{COURSE}}, duration is {{DURATION}}, trainer by {{TRAINER}}"

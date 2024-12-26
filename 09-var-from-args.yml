@@ -1,0 +1,6 @@
+- name: print variables from agrs
+  hosts: anisble_node_private_IP
+  tasks:
+  - name: give variables while executing
+    ansible.builtin.debug:
+      msg: "Hi i am learning {{Course}}, duration is {{Duration}}, trainer by {{Trainer}}"

@@ -1,0 +1,25 @@
+- name: check the given details of conditions
+  hosts: local
+  connection: local
+  vars_prompt:  # if we given any integer with prompt then in condition we have to mention datatype with piple|
+  - name: my_number            #number is reserve keyword so we use my_number
+    prompt: enter the number 
+    private: false #not confidential
+  # vars:
+  #  my_number: 120
+
+  tasks:
+  - name: print this if less than 10
+    ansible.builtin.debug:
+      msg: "given number {{my_number}} is less than 10"
+    when: my_number | int < 10 # conditional expression
+
+  - name: print this if greater than 10
+    ansible.builtin.debug:
+      msg: "given number {{my_number}} is greter than or equals to 10"
+    when: my_number | int >= 10
+
+  # - name: print this if greater than 10
+  #   ansible.builtin.debug:
+  #     msg: "given number {{my_number}} is greter than or equals to 10"
+  #   when: my_number >= 10
